@@ -99,7 +99,7 @@ anova(total,update(total, .~.-info_tweet_st-ht_st-ltw))
 total.best <- update(total, .~.-ht_st-ltw)
 total_plot <- model_to_plot(total.best)  + scale_x_discrete(labels=rev(c(
   "Log(N Mentions in 2014)","Total Cult. Pref.", "Log(N Checkins)", "Proportion Info Content", "Cosine Similarity of Tweets")))
-ggsave("/Users/kjoseph/Dropbox/Kenny/papers/current/fs_lizardo/total_res.png",total_plot,h=3,w=6)
+ggsave("total_res.png",total_plot,h=3,w=6)
 
 
 weak <- update(total,weak_ties~.-total_pref_st+weak_pref_st+strong_pref_st)
@@ -116,7 +116,7 @@ anova(weak.best, update(weak.best,.~.-ltw))
 weak.best <- update(weak.best,.~.-ltw)
 weak_plot <- model_to_plot(weak.best)  + scale_x_discrete(labels=rev(c(
   "Log(N Mentions in 2014)","Num. Weak Cult. Pref.", "Cosine Similarity of Tweets")))
-ggsave("/Users/kjoseph/Dropbox/Kenny/papers/current/fs_lizardo/weak_res.png",weak_plot,h=3,w=6)
+ggsave("weak_res.png",weak_plot,h=3,w=6)
 
 strong <- update(total,strong_ties~.-total_pref_st+weak_pref_st+strong_pref_st)
 ##remove ht
@@ -125,7 +125,7 @@ strong.best <-update(strong,.~.-strong_pref_st-weak_pref_st-lc-ht_st)
 strong_plot <- model_to_plot(strong.best)  + scale_x_discrete(labels=rev(c("Log(N Mentions in 2014)",
                                                                            "Log(N Tweets in 2014)",
                                                                            "Proportion Info Content","Cosine Similarity of Tweets")))
-ggsave("/Users/kjoseph/Dropbox/Kenny/papers/current/fs_lizardo/strong_res.png",strong_plot,h=3,w=6)
+ggsave("strong_res.png",strong_plot,h=3,w=6)
 
 #Now I have to move some data along to get H1, H2
 alter_connections <- fread("../data/alter_tie_strength.tsv")
@@ -144,26 +144,15 @@ wtnb_plot <- model_to_plot(wtnb) + scale_x_discrete(labels=
                                                             "Log(N Tweets in 2014)")))
 
 
-ggsave("/Users/kjoseph/Dropbox/Kenny/papers/submitted/fs_lizardo/all_n_conn_res.png",wtnb_plot,h=3,w=6)
+ggsave("all_n_conn_res.png",wtnb_plot,h=3,w=6)
 
 
 
 wt_cos_plot <- ggplot(tie_user_data[-1497], aes(weak,cosine_sim)) + stat_summary(fun.data="mean_cl_boot")  + stat_smooth(method='lm')  + ylab("Cosine Similarity") + xlab("Number of Weak Cultural Preferences")
-ggsave("/Users/kjoseph/Dropbox/Kenny/papers/submitted/fs_lizardo/wt_cos_res.png",wt_cos_plot,h=4,w=7)
+ggsave("wt_cos_res.png",wt_cos_plot,h=4,w=7)
 
 st_cos_plot <- ggplot(tie_user_data[-1497], aes(strong,cosine_sim)) + stat_summary(fun.data="mean_cl_boot")  + stat_smooth(method='lm')  + ylab("Cosine Similarity") + xlab("Number of Strong Cultural Preferences")
-ggsave("/Users/kjoseph/Dropbox/Kenny/papers/submitted/fs_lizardo/st_cos_res.png",st_cos_plot,h=4,w=7)
+ggsave("st_cos_res.png",st_cos_plot,h=4,w=7)
 
-
-tie_user_data$info_prop <- tie_user_data$informational_tweet_count/tie_user_data$n_tweets_prior_2014
-
-##correlation between informational tweet count and tweets in 2014
-f <- function(d, i){
-  d2 <- d[i,]
-  return(cor(d2$info_prop, log(d2$tweets_in_2014), use="pairwise.complete.obs"))
-}
-
-bootcorr <- boot(tie_user_data, f, R=10000)
-boot.ci(bootcorr, type = "all")
 
 
