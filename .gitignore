@@ -1,0 +1,11 @@
+tmp/
+*.RData
+*.rdata
+*.Rhistory
+R/scrap.R
+R/sample.R
+*.Rproj
+data/tmp_*/
+data/original_checkin_data/
+R/.Rproj.user/
+.Rproj.user
